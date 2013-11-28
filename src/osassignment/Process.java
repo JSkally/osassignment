@@ -1,177 +1,80 @@
 package osassignment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.lang.Math;
-
-class Process
-
-{
-	public static final boolean CPU_BURST = true, IO_BURST = false;
-	private int pid; // process ID
-	private int CPU_BurstTime; // CPU burst time
-	private int IO_BurstTime; // IO burst time
-	private int CPU_Bursts; // number of CPU bursts
-	private int IO_Bursts; // number of I/O bursts
-	private int finishTime;
-	private int leftTime;
-	private int burstLeftTime;
-	private int ioBurstLeftTime;
-	private int ioLeftBursts;
-	private int leftBursts;
-	private int burstIndex = 0;
-	private int arrivalTime;
-	private int tempArrivalTime;
-	private int waitingTime;
-	private int flag;
-	private boolean sequence[];
+class Process {
+	private final int pid;
+	private final int arrivalTime;
+	private int burstTime;
+	private int waitTime;
+	private int bursts;
+	private final double ioPercentage;
+	ProcessState state;
 
 	// Process constructor
 	public Process() {
-		this(0, 0, 0, 0, 0);
+		this(0, 0, 0, 0.0);
 	}
 
-	public Process(int pid, int cpuBurstsNum, int cpuBurstTime,
-			int ioBurstsNum, int ioBurstTime) {
+	public Process(int pid, int arrTime, int burTime, double ioPct) {
 		this.pid = pid;
-		this.CPU_BurstTime = cpuBurstTime;
-		this.IO_BurstTime = ioBurstTime;
-		this.CPU_Bursts = cpuBurstsNum;
-		this.IO_Bursts = ioBurstsNum;
-		burstLeftTime = CPU_BurstTime;
-		ioBurstLeftTime = IO_BurstTime;
-		leftBursts = CPU_Bursts;
-		ioLeftBursts = IO_Bursts;
-		leftTime = getTotalCPUTime();
-		sequence = new boolean[CPU_Bursts + IO_Bursts];
-		generateSequence();
-		waitingTime = 0;
-		flag = 1;
-		// printSequence();
+		this.arrivalTime = arrTime;
+		this.burstTime = burTime;
+		this.ioPercentage = ioPct;
+		this.state = ProcessState.NEW;
 	}
 
-	public int getTotalCPUTime() {
-		return CPU_BurstTime * CPU_Bursts;
+	public int getBurstTime() {
+		return burstTime;
 	}
 
-	public int getBurstLeftTime() {
-		return burstLeftTime;
+	public void setBurstTime(int burstTime) {
+		this.burstTime = burstTime;
 	}
 
-	public int getLeftBursts() {
-		return leftBursts;
-	}
-
-	public int getIOBurstLeftTime() {
-		return ioBurstLeftTime;
-	}
-
-	public void servedOneIOClock() {
-		ioBurstLeftTime--;
-	}
-
-	public int getIOBurstsLeft() {
-		return ioLeftBursts;
-	}
-
-	public String toString() {
-		return (pid + " - " + getTotalCPUTime());
-	}
-
-	public int getRemainingTime() {
-		return leftTime;
-	}
-
-	public void servedOneClock() {
-		leftTime--;
-		burstLeftTime--;
-	}
-
-	public void servedOneIOBurst() {
-		ioLeftBursts--;
-		ioBurstLeftTime = IO_BurstTime;
-		burstIndex++;
-	}
-
-	public void servedOneBurst() {
-		leftBursts--;
-		burstLeftTime = CPU_BurstTime;
-		burstIndex++;
-	}
-
-	public boolean getBurstType() {
-		return sequence[burstIndex - 1];
-	}
-
-	public void finishedAt(int t) {
-		finishTime = t;
-	}
-
-	public int getPID() {
+	public int getPid() {
 		return pid;
-	}
-
-	public void setArrivalTime(int t) {
-		arrivalTime = t;
-		flag = 1; // to indicate the first burst has already arrived.
-	}
-
-	public void setTempArrivalTime(int t) {
-		tempArrivalTime = t;
-	}
-
-	public void setItsWait(int clock) {
-		if (flag == 1) {
-			waitingTime = (clock - arrivalTime);
-			flag = 0;
-		}
-	}
-
-	int getFlag() {
-		return flag;
-	}
-
-	public int getItsWait() {
-		return waitingTime;
 	}
 
 	public int getArrivalTime() {
 		return arrivalTime;
 	}
 
-	public void generateSequence() {
-		int cpu = 1;
-		int io = 0;
-		sequence[0] = true;
-		for (int i = 1; cpu < this.CPU_Bursts || io < this.IO_Bursts; i++) {
-			if ((i % 2 == 0) || (io == this.IO_Bursts)) {
-				sequence[i] = true;
-				cpu++;
-			} else {
-				sequence[i] = false;
-				io++;
-			}
+	public double getIoPercentage() {
+		return ioPercentage;
+	}
 
+	public int getCurrentTime() {
+		return bursts;
+	}
+
+	public int getWaitTime() {
+		return waitTime;
+	}
+
+	public void incrementWaitTime(int waitTime) {
+		this.waitTime += waitTime;
+	}
+
+	public int generateInstruction() throws Exception {
+		// Edge cases
+		if (this.state != ProcessState.RUNNING) {
+			throw new Exception("Process must be running to execute");
 		}
+
+		this.bursts++;
+		return (int) (3000 + (Math.random() * (4000 - 3000)));
 	}
 
-	public int getTotalBursts() {
-		return sequence.length;
-	}
-
-	public int getBurstIndex() {
-		return burstIndex;
-	}
-
-	public int getTurnAroundTime() {
-		return finishTime;
-	}
-
-	public void printSequence() {
-		System.out.print("[");
-		for (int i = 0; i < sequence.length - 1; i++) {
-			System.out.print(sequence[i] + ",");
+	public byte[] generateRegisters() throws Exception {
+		// Edge cases
+		if (this.state != ProcessState.RUNNING) {
+			throw new Exception("Process must be running to execute");
 		}
-		System.out.println(sequence[sequence.length - 1] + "]");
+
+		byte[] registers = new byte[3];
+
+		for (int i = 0; i < registers.length; i++) {
+			registers[i] = (byte) (Math.random() * 256);
+		}
+		return registers;
 	}
 }
