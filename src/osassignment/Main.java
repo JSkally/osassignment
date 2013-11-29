@@ -11,22 +11,10 @@ public class Main {
 		// Read processes in from the file and add them to the ready queue.
 		Scanner sn;
 		Queue<Process> readyQueue = new LinkedList<Process>();
-		try {
-			sn = new Scanner(new FileReader(PROCESSES_FILE));
-		} catch (FileNotFoundException e) {
-			System.out.println("'" + PROCESSES_FILE + "' not found.");
-			return;
+
+		for (int i = 0; i < 20; i++) {
+			readyQueue.add(new Process(i, i + 20, i + 13, 0.3));
 		}
-		sn.useDelimiter(",");
-		int time = 0;
-		while (sn.hasNextLine()) {
-			int pid = sn.nextInt();
-			int runtime = sn.nextInt();
-			double iopct = sn.nextDouble();
-			readyQueue.add(new Process(pid, runtime, time, iopct));
-			time++;
-		}
-		sn.close();
 
 		int ticker = 0;
 		CPU cpu = new CPU();
@@ -36,6 +24,7 @@ public class Main {
 				try {
 					cpu.setPC(process.generateInstruction());
 					cpu.setRegisters(process.generateRegisters());
+					System.out.print(cpu);
 				} catch (Exception e) {
 					System.out.print(e.getMessage());
 				}

@@ -8,7 +8,7 @@ public class CPU {
 
 	public CPU() {
 		// Registers R0 - R3
-		setRegisters(new byte[3]);
+		setRegisters(new byte[4]);
 	}
 
 	public byte getMode() {
@@ -29,6 +29,16 @@ public class CPU {
 
 	public void setPC(int pC) {
 		PC = pC;
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PC: " + this.PC + "\n Registers:\n");
+		for (int i = 0; i < this.registers.length; i++) {
+			sb.append("R" + i + ": " + registers[i] + "\n");
+		}
+
+		return sb.toString();
 	}
 
 }
