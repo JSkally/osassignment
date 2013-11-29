@@ -1,7 +1,5 @@
 package osassignment;
 
-import java.util.*;
-
 class Process {
 	private final int pid;
 	private final int arrivalTime;
@@ -10,7 +8,6 @@ class Process {
 	private int bursts;
 	private final double ioPercentage;
 	ProcessState state;
-	private Random rng;
 
 	// Process constructor
 	public Process() {
@@ -23,7 +20,6 @@ class Process {
 		this.burstTime = burTime;
 		this.ioPercentage = ioPct;
 		this.state = ProcessState.NEW;
-		this.rng = new Random();
 	}
 
 	public int getBurstTime() {
@@ -53,6 +49,10 @@ class Process {
 	public int getWaitTime() {
 		return waitTime;
 	}
+	
+	public int getTimeLeft(){
+		return burstTime - bursts;
+	}
 
 	public void incrementWaitTime(int waitTime) {
 		this.waitTime += waitTime;
@@ -65,7 +65,7 @@ class Process {
 		}
 
 		this.bursts++;
-		return 3000 + this.rng.nextInt(4000);
+		return (int) (3000 + (Math.random() * (4000 - 3000)));
 	}
 
 	public byte[] generateRegisters() throws Exception {
@@ -74,10 +74,10 @@ class Process {
 			throw new Exception("Process must be running to execute");
 		}
 
-		byte[] registers = new byte[4];
+		byte[] registers = new byte[3];
 
 		for (int i = 0; i < registers.length; i++) {
-			registers[i] = (byte) this.rng.nextInt(128);
+			registers[i] = (byte) (Math.random() * 256);
 		}
 		return registers;
 	}
