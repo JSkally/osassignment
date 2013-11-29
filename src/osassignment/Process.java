@@ -4,8 +4,9 @@ class Process {
 	private final int pid;
 	private final int arrivalTime;
 	private int burstTime;
-	private int waitTime;
-	private int bursts;
+	int waitTime;
+	int bursts;
+	private int firstBurst;
 	private final double ioPercentage;
 	ProcessState state;
 
@@ -29,7 +30,11 @@ class Process {
 	public void setBurstTime(int burstTime) {
 		this.burstTime = burstTime;
 	}
-
+	
+	public void setFirstBurst(int firstBurst){
+		this.firstBurst = firstBurst;
+	}
+	
 	public int getPid() {
 		return pid;
 	}
@@ -53,7 +58,11 @@ class Process {
 	public int getTimeLeft(){
 		return burstTime - bursts;
 	}
-
+	
+	public int getResponseTime(){
+		return firstBurst - arrivalTime;
+	}
+	
 	public void incrementWaitTime(int waitTime) {
 		this.waitTime += waitTime;
 	}
@@ -65,7 +74,7 @@ class Process {
 		}
 
 		this.bursts++;
-		return (int) (3000 + (Math.random() * (4000 - 3000)));
+		return (int) Math.abs((3000 + (Math.random() * (4000 - 3000))));
 	}
 
 	public byte[] generateRegisters() throws Exception {
@@ -77,7 +86,7 @@ class Process {
 		byte[] registers = new byte[4];
 
 		for (int i = 0; i < registers.length; i++) {
-			registers[i] = (byte) (Math.random() * 256);
+			registers[i] = (byte) Math.abs((Math.random() * 256));
 		}
 		return registers;
 	}
