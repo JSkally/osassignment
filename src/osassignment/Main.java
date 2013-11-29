@@ -36,7 +36,8 @@ public class Main {
 
 		int ticker = 0;
 		CPU cpu = new CPU();
-	     System.out.println("\nTick\tProcess_ID\tTimeLeft\tPC\tR0\tR1\tR2\tR3\tProcessState\tReadyQueue");
+	    System.out.println("\nTick   Process_ID   TimeLeft       PC           R0           R1           R2            R3  ProcessState   ReadyQueue");
+	    System.out.println("=====+=============+========+==========+============+============+============+=============+==============+=============+");
 		for (Process process : readyQueue) {
 			process.state = ProcessState.RUNNING;
 			for (int i = 0; i < process.getBurstTime(); i++) {
@@ -53,10 +54,11 @@ public class Main {
 				process.state = ProcessState.TERMINATED;
 			}
 		
-
-	        System.out.println(ticker+"\t"+process.getPid()+"\t"+process.getTimeLeft()+"\t\t"+cpu.getPC()+"\t\t"+cpu.getRegisters()+"\t\t"+cpu.getRegisters()+"\t\t"+cpu.getRegisters()+"\t\t"+cpu.getRegisters()
-	        			+"\t\t"+process.state);
-
+	        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|", 
+	        				 ticker, Integer.toString(process.getPid()),Integer.toString(process.getTimeLeft()),
+	        				 Integer.toString(cpu.getPC()), Integer.toString(cpu.getRegisters()[0]),cpu.getRegisters()[1],
+	        				 cpu.getRegisters()[2],cpu.getRegisters()[3],process.state);
+	        System.out.println("");
 	    }
 	
 	}

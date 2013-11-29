@@ -74,7 +74,7 @@ class Process {
 			throw new Exception("Process must be running to execute");
 		}
 
-		byte[] registers = new byte[3];
+		byte[] registers = new byte[4];
 
 		for (int i = 0; i < registers.length; i++) {
 			registers[i] = (byte) (Math.random() * 256);
