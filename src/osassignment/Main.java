@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Main {
 
-	final static String PROCESSES_FILE = "/home/gab/Desktop/processes.txt";
+	final static String PROCESSES_FILE = "processes.txt";
 
 	public static void main(String[] args) {
 		// Read processes in from the file and add them to the ready queue.
@@ -25,10 +25,10 @@ public class Main {
 			int arrival = sn.nextInt();
 			System.out.println(arrival);
 			int runtime = sn.nextInt();
-			System.out.println(runtime);	
+			System.out.println(runtime);
 			double iopct = sn.nextDouble();
 			sn.nextLine();
-			
+
 			readyQueue.add(new Process(pid, arrival, runtime, iopct));
 			time++;
 		}
@@ -53,14 +53,14 @@ public class Main {
 			if (ticker == process.getBurstTime()){
 				process.state = ProcessState.TERMINATED;
 			}
-		
-	        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|", 
+
+	        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|",
 	        				 ticker, Integer.toString(process.getPid()),Integer.toString(process.getTimeLeft()),
 	        				 Integer.toString(cpu.getPC()), Integer.toString(cpu.getRegisters()[0]),cpu.getRegisters()[1],
 	        				 cpu.getRegisters()[2],cpu.getRegisters()[3],process.state);
 	        System.out.println("");
 	    }
-	
+
 	}
 
 }
