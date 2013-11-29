@@ -1,7 +1,6 @@
 package osassignment;
 
 import java.util.*;
-import java.io.*;
 
 public class Main {
 
@@ -9,7 +8,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Read processes in from the file and add them to the ready queue.
-		Scanner sn;
 		Queue<Process> readyQueue = new LinkedList<Process>();
 
 		for (int i = 0; i < 20; i++) {
@@ -24,7 +22,7 @@ public class Main {
 				try {
 					cpu.setPC(process.generateInstruction());
 					cpu.setRegisters(process.generateRegisters());
-					System.out.print(cpu);
+					System.out.print("CPU at " + ticker + ": " + cpu);
 				} catch (Exception e) {
 					System.out.print(e.getMessage());
 				}
