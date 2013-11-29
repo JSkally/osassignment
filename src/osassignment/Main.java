@@ -21,26 +21,29 @@ public class Main {
 		int time = 0;
 		while (sn.hasNextLine()) {
 			int pid = sn.nextInt();
-			System.out.println(pid);
 			int arrival = sn.nextInt();
-			System.out.println(arrival);
 			int runtime = sn.nextInt();
-			System.out.println(runtime);
 			double iopct = sn.nextDouble();
 			sn.nextLine();
-
+			
 			readyQueue.add(new Process(pid, arrival, runtime, iopct));
 			time++;
 		}
 		sn.close();
+		
+		for (Process process : readyQueue) {
+			process.state = ProcessState.READY;
+		}
 
 		int ticker = 0;
 		CPU cpu = new CPU();
-	    System.out.println("\nTick   Process_ID   TimeLeft       PC           R0           R1           R2            R3  ProcessState   ReadyQueue");
-	    System.out.println("=====+=============+========+==========+============+============+============+=============+==============+=============+");
+	     System.out.println("\nTick\tProcess_ID\tTimeLeft\tPC\tR0\tR1\tR2\tR3\tProcessState\tReadyQueue");
 		for (Process process : readyQueue) {
 			process.state = ProcessState.RUNNING;
-			for (int i = 0; i < process.getBurstTime(); i++) {
+			process.bursts = 0;
+			process.setFirstBurst(ticker);
+			
+			for (int i = 0; i < process.getBurstTime()+1; i++) {
 				try {
 					cpu.setPC(process.generateInstruction());
 					cpu.setRegisters(process.generateRegisters());
@@ -48,19 +51,26 @@ public class Main {
 					System.out.print(e.getMessage());
 				}
 
+				if (process.getTimeLeft() == 0){
+					process.state = ProcessState.TERMINATED;
+					//readyQueue.remove(process);
+					process.incrementWaitTime(ticker - process.bursts);
+				}
+				
+				int timeBefore = process.getTimeLeft()+1;
+				
+				System.out.println(ticker+"\t"+process.getPid()+"\t\t"+ timeBefore+"->"+ process.getTimeLeft()+"\t\t"+cpu.getPC()+"\t"+cpu.getRegisters()[0]+"\t"+cpu.getRegisters()[1]+"\t"+cpu.getRegisters()[2]+"\t"+cpu.getRegisters()[3]
+	        			+"\t"+process.state + "\t\t") ;
+					
+				
+				process.bursts = i;
+				
 				ticker++;
 			}
-			if (ticker == process.getBurstTime()){
-				process.state = ProcessState.TERMINATED;
-			}
-
-	        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|",
-	        				 ticker, Integer.toString(process.getPid()),Integer.toString(process.getTimeLeft()),
-	        				 Integer.toString(cpu.getPC()), Integer.toString(cpu.getRegisters()[0]),cpu.getRegisters()[1],
-	        				 cpu.getRegisters()[2],cpu.getRegisters()[3],process.state);
-	        System.out.println("");
+			
+					
 	    }
-
+	
 	}
 
 }
