@@ -62,8 +62,8 @@ public class Main {
 				
 		        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|", 
        				 ticker, Integer.toString(process.getPid()), (process.getTimeLeft()+"->"+timeAfter),
-       				 Integer.toString(cpu.getPC()), Integer.toString(cpu.getRegisters()[0]),cpu.getRegisters()[1],
-       				 cpu.getRegisters()[2],cpu.getRegisters()[3],process.state);
+       				 Integer.toString(cpu.getPC()), Math.abs(cpu.getRegisters()[0]),Math.abs(cpu.getRegisters()[1]),
+       				Math.abs(cpu.getRegisters()[2]), Math.abs(cpu.getRegisters()[3]) ,process.state);
 		        System.out.println("");
 					
 				
