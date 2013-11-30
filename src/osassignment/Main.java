@@ -102,9 +102,9 @@ public class Main {
 	    System.out.println("Total number of processes: " + processTotal);
 	    System.out.println("Shortest process completion time: " + minCompletionTime);
 	    System.out.println("Longest process completion time: " + maxCompletionTime);
-	    System.out.println("Average Turnaround/Completion time: " + totalTurnAroundTime/processTotal);
-	    System.out.println("Average Wait time: " + (waitTimeTotal/processTotal));
-	    System.out.println("Average Response time: " + (responseTimeTotal/processTotal));
+	    System.out.println("Average Turnaround/Completion time: " + ((double)totalTurnAroundTime/processTotal));
+	    System.out.println("Average Wait time: " + ((double)waitTimeTotal/processTotal));
+	    System.out.println("Average Response time: " + ((double)responseTimeTotal/processTotal));
 	
 	}
 
