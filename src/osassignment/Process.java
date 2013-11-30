@@ -63,6 +63,10 @@ class Process {
 		return firstBurst - arrivalTime;
 	}
 	
+	public int setTurnAroundTime(int ticker){
+		return ticker - arrivalTime;
+	}
+	
 	public void incrementWaitTime(int waitTime) {
 		this.waitTime += waitTime;
 	}
