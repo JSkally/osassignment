@@ -5,7 +5,7 @@ import java.io.*;
 
 public class Main {
 
-	final static String PROCESSES_FILE = "processes.txt";
+	final static String PROCESSES_FILE = "/home/gab/Desktop/processes.txt";
 
 	public static void main(String[] args) {
 		// Read processes in from the file and add them to the ready queue.
@@ -40,31 +40,30 @@ public class Main {
 	     System.out.println("\nTick\tProcess_ID\tTimeLeft\tPC\tR0\tR1\tR2\tR3\tProcessState\tReadyQueue");
 		for (Process process : readyQueue) {
 			process.state = ProcessState.RUNNING;
-			process.bursts = 0;
+			//process.bursts = 0;
 			process.setFirstBurst(ticker);
 			
-			for (int i = 0; i < process.getBurstTime()+1; i++) {
+			for (int i = 0; i < process.getBurstTime(); i++) {
 				try {
 					cpu.setPC(process.generateInstruction());
 					cpu.setRegisters(process.generateRegisters());
 				} catch (Exception e) {
 					System.out.print(e.getMessage());
 				}
-
+				process.bursts = i;
 				if (process.getTimeLeft() == 0){
 					process.state = ProcessState.TERMINATED;
-					process.setTurnAroundTime(ticker);
 					//readyQueue.remove(process);
 					process.incrementWaitTime(ticker - process.bursts);
 				}
 				
-				int timeBefore = process.getTimeLeft()+1;
+				int timeAfter = process.getTimeLeft()-1;
 				
-				System.out.println(ticker+"\t"+process.getPid()+"\t\t"+ timeBefore+"->"+ process.getTimeLeft()+"\t\t"+cpu.getPC()+"\t"+cpu.getRegisters()[0]+"\t"+cpu.getRegisters()[1]+"\t"+cpu.getRegisters()[2]+"\t"+cpu.getRegisters()[3]
+				System.out.println(ticker+"\t"+process.getPid()+"\t\t"+ process.getTimeLeft()+"->"+timeAfter+"\t\t"+cpu.getPC()+"\t"+cpu.getRegisters()[0]+"\t"+cpu.getRegisters()[1]+"\t"+cpu.getRegisters()[2]+"\t"+cpu.getRegisters()[3]
 	        			+"\t"+process.state + "\t\t") ;
 					
 				
-				process.bursts = i;
+				
 				
 				ticker++;
 			}
