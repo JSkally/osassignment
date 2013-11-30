@@ -10,6 +10,7 @@ class Process {
     private int firstBurst;
     private final double ioPercentage;
     private ProcessState state;
+    private Random rng;
 
     // Process constructor
     public Process() {
@@ -22,6 +23,7 @@ class Process {
         this.burstTime = burTime;
         this.ioPercentage = ioPct;
         this.setState(ProcessState.NEW);
+        this.rng = new Random();
     }
 
     public int getBurstTime() {
@@ -65,12 +67,13 @@ class Process {
     }
 
     public int setTurnAroundTime(int ticker) {
-        return ticker - arrivalTime+1;
+        return ticker - arrivalTime;
     }
 
     public int getTurnAroundTime(){
           return turnAroundTime;
         }
+<<<<<<< HEAD
 
     public void incrementWaitTime(int waitTime) {
         this.waitTime += waitTime;
@@ -80,28 +83,36 @@ class Process {
         this.bursts++;
     }
 
-   public int generateInstruction() throws Exception {
-                // Edge cases
-                if (this.state != ProcessState.RUNNING) {
-                        throw new Exception("Process must be running to execute");
-                }
-
-                this.bursts++;
-                return (int) Math.abs((3000 + (Math.random() * (4000 - 3000))));
+    public int generateInstruction() throws Exception {
+        // Edge cases
+        if (this.getState() != ProcessState.RUNNING) {
+            throw new Exception("Process must be running to execute");
+=======
+        
+        public void setTurnAroundTime(int ticker){
+        		this.turnAroundTime = ticker - arrivalTime+1;
+>>>>>>> eeda28e3b6812b9976a6004b449ffe95e00c71bc
         }
 
+        if (this.bursts == this.burstTime - 1) {
+            this.setState(ProcessState.TERMINATED);
+        }
+
+        return 3000 + this.rng.nextInt(4000);
+    }
+
     public byte[] generateRegisters() throws Exception {
-            // Edge cases
-            if (this.state != ProcessState.RUNNING) {
-                    throw new Exception("Process must be running to execute");
-            }
+        // Edge cases
+        if (this.state != ProcessState.RUNNING) {
+            throw new Exception("Process must be running to execute");
+        }
 
-            byte[] registers = new byte[4];
+        byte[] registers = new byte[4];
 
-            for (int i = 0; i < registers.length; i++) {
-                    registers[i] = (byte) Math.abs((Math.random() * 256));
-            }
-            return registers;
+        for (int i = 0; i < registers.length; i++) {
+            registers[i] = (byte) Math.abs((Math.random() * 256));
+        }
+        return registers;
     }
 
     public ProcessState getState() {
@@ -112,4 +123,12 @@ class Process {
         this.state = state;
     }
 
+<<<<<<< HEAD
+=======
+                for (int i = 0; i < registers.length; i++) {
+                        registers[i] = (byte) Math.abs((Math.random() * 256));
+                }
+                return registers;
+        }
+>>>>>>> eeda28e3b6812b9976a6004b449ffe95e00c71bc
 }
