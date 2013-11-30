@@ -51,7 +51,7 @@ public class Main {
 					System.out.print(e.getMessage());
 				}
 				process.bursts = i;
-				if (process.getTimeLeft() == 0){
+				if (process.getTimeLeft() == 1){
 					process.state = ProcessState.TERMINATED;
 					//readyQueue.remove(process);
 					process.incrementWaitTime(ticker - process.bursts);
