@@ -53,6 +53,7 @@ public class Main {
 
 				if (process.getTimeLeft() == 0){
 					process.state = ProcessState.TERMINATED;
+					process.setTurnAroundTime(ticker);
 					//readyQueue.remove(process);
 					process.incrementWaitTime(ticker - process.bursts);
 				}
