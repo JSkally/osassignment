@@ -65,7 +65,7 @@ class Process {
         }
         
         public void setTurnAroundTime(int ticker){
-        		this.turnAroundTime = ticker - arrivalTime;
+        		this.turnAroundTime = ticker - arrivalTime+1;
         }
  
         public int getTurnAroundTime(){
