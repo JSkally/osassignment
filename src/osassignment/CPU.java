@@ -1,5 +1,3 @@
-package osassignment;
-
 public class CPU {
 
 	private int PC;

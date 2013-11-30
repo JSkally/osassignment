@@ -1,11 +1,9 @@
-package osassignment;
-
 import java.util.*;
 import java.io.*;
 
 public class Main {
 
-	final static String PROCESSES_FILE = "../osassignment/src/osassignment/processes.txt";
+	final static String PROCESSES_FILE = "processes.txt";
 
     public static void main(String[] args) {
         // Read processes in from the file and add them to the ready queue.
@@ -25,14 +23,14 @@ public class Main {
                 int runtime = sn.nextInt();
                 double iopct = sn.nextDouble();
                 sn.nextLine();
-                
+
                 readyQueue.add(new Process(pid, arrival, runtime, iopct));
                 time++;
         }
         sn.close();
-        
+
         for (Process process : readyQueue) {
-                process.state = ProcessState.READY;
+               process.setState(ProcessState.READY);
         }
 
         int ticker = 0;
@@ -40,10 +38,10 @@ public class Main {
 	    System.out.println("\nTick   Process_ID   TimeLeft       PC           R0           R1           R2            R3   ProcessState   ReadyQueue");
 	    System.out.println("=====+=============+========+==========+============+============+============+=============+==============+=============+");
         for (Process process : readyQueue) {
-            process.state = ProcessState.RUNNING;
+            process.setState(ProcessState.RUNNING);
             //process.bursts = 0;
             process.setFirstBurst(ticker);
-            
+
             for (int i = 0; i < process.getBurstTime(); i++) {
                     try {
                             cpu.setPC(process.generateInstruction());
@@ -53,43 +51,44 @@ public class Main {
                     }
                     process.bursts = i;
                     if (process.getTimeLeft() == 1){
-                            process.state = ProcessState.TERMINATED;
+                            process.setState(ProcessState.TERMINATED);
+                            process.setTurnAroundTime(ticker);
                             //readyQueue.remove(process);
                             process.incrementWaitTime(ticker - process.bursts);
                     }
-                    
+
                     int timeAfter = process.getTimeLeft()-1;
-				
-		        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|", 
+
+		        System.out.format("%5s| %12s| %7s| %9s| %11s| %11s| %11s| %12s| %13s|",
        				 ticker, Integer.toString(process.getPid()), (process.getTimeLeft()+"->"+timeAfter),
        				 Integer.toString(cpu.getPC()), Integer.toString(cpu.getRegisters()[0]),cpu.getRegisters()[1],
-       				 cpu.getRegisters()[2],cpu.getRegisters()[3],process.state);
+       				 cpu.getRegisters()[2],cpu.getRegisters()[3],process.getState());
 		        System.out.println("");
-					
-				
+
+
 				//process.bursts = i;
 				process.setTurnAroundTime(ticker);
 				ticker++;
 			}
-			
-					
+
+
 	    }
 		System.out.println("\n");
 	    System.out.println("  Pid   Time in Ready Queue   Total Time    Wait Time   Response time  Turn Around Time");
 	    System.out.println("======+=====================+=============+===========+===============+=================+");
-	    
+
 	    int processTotal = 0;
 	    int responseTimeTotal = 0;
 	    int waitTimeTotal = 0;
-	    int totalTurnAroundTime = 0; 
+	    int totalTurnAroundTime = 0;
 	    int minCompletionTime = 999999;
 	    int maxCompletionTime = 0;
-	    
+
 		for (Process process : readyQueue) {
-			 System.out.format("%6s| %20s| %13s| %12s| %11s| %16s|", 
+			 System.out.format("%6s| %20s| %13s| %12s| %11s| %16s|",
 			 Integer.toString(process.getPid()),process.getWaitTime(),"s", process.getWaitTime(), process.getResponseTime(), process.getTurnAroundTime());
 			 System.out.println("");
-			 
+
 			 processTotal++;
 			 responseTimeTotal = responseTimeTotal + process.getResponseTime();
 			 waitTimeTotal = waitTimeTotal + process.getWaitTime();
@@ -105,7 +104,7 @@ public class Main {
 	    System.out.println("Average Turnaround/Completion time: " + totalTurnAroundTime/processTotal);
 	    System.out.println("Average Wait time: " + (waitTimeTotal/processTotal));
 	    System.out.println("Average Response time: " + (responseTimeTotal/processTotal));
-	
+
 	}
 
 }
